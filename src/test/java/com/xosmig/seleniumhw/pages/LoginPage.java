@@ -1,13 +1,12 @@
-package com.xosmig.seleniumhw;
+package com.xosmig.seleniumhw.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 public final class LoginPage extends PageObject {
     private WebElement loginInput;
@@ -26,9 +25,9 @@ public final class LoginPage extends PageObject {
 
     @Override
     public void load() {
-        driver.get(getAddr());
-        loginInput = wait.until(presenceOfElementLocated(By.id("id_l.L.login")));
-        passwordInput = wait.until(presenceOfElementLocated(By.id("id_l.L.password")));
+        super.load();
+        loginInput = wait.until(visibilityOfElementLocated(By.id("id_l.L.login")));
+        passwordInput = wait.until(visibilityOfElementLocated(By.id("id_l.L.password")));
         loginButton = wait.until(elementToBeClickable(By.id("id_l.L.loginButton")));
     }
 

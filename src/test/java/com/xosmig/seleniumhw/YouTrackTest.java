@@ -1,5 +1,8 @@
 package com.xosmig.seleniumhw;
 
+import com.xosmig.seleniumhw.pages.CreateProjectPage;
+import com.xosmig.seleniumhw.pages.EditProjectPage;
+import com.xosmig.seleniumhw.pages.LoginPage;
 import org.junit.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.WebDriver;
@@ -15,7 +18,6 @@ public class YouTrackTest {
     private static WebDriver driver;
     private static WebDriverWait wait;
 
-    @BeforeClass
     public static void driverInit() {
         URL driverUnix = Thread.currentThread().getContextClassLoader().getResource("geckodriver");
         URL driverWindows = Thread.currentThread().getContextClassLoader().getResource("geckodriver.exe");
@@ -27,20 +29,44 @@ public class YouTrackTest {
         wait = new WebDriverWait(driver, 5);
     }
 
-    @AfterClass
     public static void driverDeinit() {
         driver.close();
     }
 
-    @Before
-    public void login() {
+    public static void login() {
         LoginPage loginPage = new LoginPage(driver, wait);
         loginPage.load();
         loginPage.doLogin("root", "root");
     }
 
+    public static void createProject(String name) {
+        CreateProjectPage createProjectPage = new CreateProjectPage(driver, wait);
+        createProjectPage.load();
+        createProjectPage.doCreateProject(name, name, "root", "A project for testing.");
+    }
+
+    public static void deleteProject(String name) {
+        EditProjectPage editProjectPage = new EditProjectPage(driver, wait, name);
+        editProjectPage.load();
+        editProjectPage.deleteProject();
+    }
+
+    @BeforeClass
+    public static void init() {
+        driverInit();
+        login();
+        createProject("testProject1");
+    }
+
+    @AfterClass
+    public static void deinit() {
+        deleteProject("testProject1");
+        driver.close();
+    }
+
     @Test
-    public void fooTest() {
+    public void fooTest() throws InterruptedException {
         assertEquals(1, 1);
+        Thread.sleep(2000);
     }
 }
