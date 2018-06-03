@@ -11,6 +11,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -18,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 
 public class YouTrackTest {
 
-    private static final String TEST_PROJECT_NAME = "testProject0";
+    private static final String TEST_PROJECT_NAME = "testProject_" + new Random().nextInt();
 
     private static WebDriver driver;
     private static WebDriverWait wait;
