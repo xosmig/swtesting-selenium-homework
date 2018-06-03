@@ -5,6 +5,7 @@ import com.xosmig.seleniumhw.pages.CreateProjectPage;
 import com.xosmig.seleniumhw.pages.EditProjectPage;
 import com.xosmig.seleniumhw.pages.IssuesPage;
 import com.xosmig.seleniumhw.pages.LoginPage;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.WebDriver;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class YouTrackTest {
 
@@ -89,6 +91,39 @@ public class YouTrackTest {
         Issue issue = new Issue("shortSummary", /*no description*/"");
         issuesPage.createIssue(TEST_PROJECT_NAME, issue);
 
+        assertEquals(issue, issuesPage.getLastIssue());
+    }
+
+    @Test
+    public void testIssuesUnicodeCharacters() {
+        issuesPage.load();
+
+        Issue issue = new Issue("Привет, Gruß, 嗨, تحية, ☺", "Пока, tschüss, adiós, 而, في حين, ☺");
+        issuesPage.createIssue(TEST_PROJECT_NAME, issue);
+
+        assertEquals(issue, issuesPage.getLastIssue());
+    }
+
+    @Test
+    public void testCreateIssueLongSummary() {
+        issuesPage.load();
+
+        Issue issue = new Issue(StringUtils.repeat("very long summary ", 100), "Short description.");
+        issuesPage.createIssue(TEST_PROJECT_NAME, issue);
+
+        Issue lastIssue = issuesPage.getLastIssue();
+        assertTrue(issue.getSummary().startsWith(lastIssue.getSummary()));
+        assertTrue(lastIssue.getSummary().length() < issue.getSummary().length());
+    }
+
+    @Test
+    public void testCreateIssueLongDescription() {
+        issuesPage.load();
+
+        Issue issue = new Issue("shortSummary", StringUtils.repeat("very long description ", 100));
+        issuesPage.createIssue(TEST_PROJECT_NAME, issue);
+
+        // descriptions are not shortened
         assertEquals(issue, issuesPage.getLastIssue());
     }
 }
