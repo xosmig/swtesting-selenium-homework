@@ -12,3 +12,5 @@ https://github.com/mozilla/geckodriver/releases
 
 * Provide access to YouTrack via localhost:8080 with an existing user with
 the name `root` and the password `root`
+
+* The YouTrack instance may have other existing projects, users and issues, **but there should be no concurrent operations**
