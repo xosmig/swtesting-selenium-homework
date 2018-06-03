@@ -14,3 +14,5 @@ https://github.com/mozilla/geckodriver/releases
 the name `root` and the password `root`
 
 * The YouTrack instance may have other existing projects, users and issues, **but there should be no concurrent operations**
+
+* Although there are no known flaky tests, it's possible that there will be some of them in your environment, so, if the tests fail, try to run them one more time.
