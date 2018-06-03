@@ -22,6 +22,7 @@ public class YouTrackTest {
 
     private static WebDriver driver;
     private static WebDriverWait wait;
+    private static IssuesPage issuesPage;
 
     public static void driverInit() {
         URL driverUnix = Thread.currentThread().getContextClassLoader().getResource("geckodriver");
@@ -61,20 +62,31 @@ public class YouTrackTest {
         driverInit();
         login();
         createProject(TEST_PROJECT_NAME);
+
+        issuesPage = new IssuesPage(driver, wait);
     }
 
     @AfterClass
     public static void deinit() {
         deleteProject(TEST_PROJECT_NAME);
-        driver.close();
+        driverDeinit();
     }
 
     @Test
-    public void testSimpleCreateIssue() throws InterruptedException {
-        IssuesPage issuesPage = new IssuesPage(driver, wait);
+    public void testSimpleCreateIssue() {
         issuesPage.load();
 
         Issue issue = new Issue("shortSummary", "Short description.");
+        issuesPage.createIssue(TEST_PROJECT_NAME, issue);
+
+        assertEquals(issue, issuesPage.getLastIssue());
+    }
+
+    @Test
+    public void testCreateIssueEmptyDescription() {
+        issuesPage.load();
+
+        Issue issue = new Issue("shortSummary", /*no description*/"");
         issuesPage.createIssue(TEST_PROJECT_NAME, issue);
 
         assertEquals(issue, issuesPage.getLastIssue());

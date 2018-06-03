@@ -8,7 +8,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
@@ -41,7 +40,9 @@ public class IssuesPage extends PageObject {
         expandButton.click();
 
         String summary = issueContainer.findElement(By.className("issue-summary")).getText();
-        String description = issueContainer.findElement(By.className("description")).getText();
+        List<WebElement> descriptionElement = issueContainer.findElements(By.className("description"));
+        String description = descriptionElement.isEmpty() ? "" : descriptionElement.get(0).getText();
+
         return new Issue(summary, description);
     }
 
