@@ -1,6 +1,5 @@
 package com.xosmig.seleniumhw;
 
-import com.xosmig.seleniumhw.elements.CreateIssueForm;
 import com.xosmig.seleniumhw.pages.CreateProjectPage;
 import com.xosmig.seleniumhw.pages.EditProjectPage;
 import com.xosmig.seleniumhw.pages.IssuesPage;
@@ -12,7 +11,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -85,16 +83,6 @@ public class YouTrackTest {
     }
 
     @Test
-    public void testCreateIssueEmptyDescription() {
-        issuesPage.load();
-
-        Issue issue = new Issue("shortSummary", /*no description*/"");
-        issuesPage.createIssue(TEST_PROJECT_NAME, issue);
-
-        assertEquals(issue, issuesPage.getLastIssue());
-    }
-
-    @Test
     public void testIssuesUnicodeCharacters() {
         issuesPage.load();
 
@@ -123,7 +111,28 @@ public class YouTrackTest {
         Issue issue = new Issue("shortSummary", StringUtils.repeat("very long description ", 100));
         issuesPage.createIssue(TEST_PROJECT_NAME, issue);
 
-        // descriptions are not shortened
+        // unlike summaries, descriptions are not shortened
+        assertEquals(issue, issuesPage.getLastIssue());
+    }
+
+    @Test
+    public void testCreateIssueEmptySummary() {
+        issuesPage.load();
+
+        Issue issue = new Issue(/*no summary*/"", "Short description");
+        issuesPage.createIssue(TEST_PROJECT_NAME, issue);
+
+        assertEquals("Summary is required", issuesPage.expectError());
+    }
+
+    @Test
+    public void testCreateIssueEmptyDescription() {
+        issuesPage.load();
+
+        Issue issue = new Issue("shortSummary", /*no description*/"");
+        issuesPage.createIssue(TEST_PROJECT_NAME, issue);
+
+        // unlike summaries, empty descriptions are allowed
         assertEquals(issue, issuesPage.getLastIssue());
     }
 }
