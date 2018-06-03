@@ -1,7 +1,9 @@
 package com.xosmig.seleniumhw;
 
+import com.xosmig.seleniumhw.elements.CreateIssueForm;
 import com.xosmig.seleniumhw.pages.CreateProjectPage;
 import com.xosmig.seleniumhw.pages.EditProjectPage;
+import com.xosmig.seleniumhw.pages.IssuesPage;
 import com.xosmig.seleniumhw.pages.LoginPage;
 import org.junit.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -9,11 +11,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class YouTrackTest {
+
+    private static final String TEST_PROJECT_NAME = "testProject0";
 
     private static WebDriver driver;
     private static WebDriverWait wait;
@@ -55,18 +60,23 @@ public class YouTrackTest {
     public static void init() {
         driverInit();
         login();
-        createProject("testProject1");
+        createProject(TEST_PROJECT_NAME);
     }
 
     @AfterClass
     public static void deinit() {
-        deleteProject("testProject1");
+        deleteProject(TEST_PROJECT_NAME);
         driver.close();
     }
 
     @Test
-    public void fooTest() throws InterruptedException {
-        assertEquals(1, 1);
-        Thread.sleep(2000);
+    public void testSimpleCreateIssue() throws InterruptedException {
+        IssuesPage issuesPage = new IssuesPage(driver, wait);
+        issuesPage.load();
+
+        Issue issue = new Issue("shortSummary", "Short description.");
+        issuesPage.createIssue(TEST_PROJECT_NAME, issue);
+
+        assertEquals(issue, issuesPage.getLastIssue());
     }
 }

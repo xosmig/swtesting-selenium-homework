@@ -14,6 +14,8 @@ public abstract class PageObject {
 
     public void load() {
         driver.get(getAddr());
+        // Sometimes doesn't work without this line (causes flakiness). Might be a bug in the driver.
+        driver.get(getAddr());
     }
 
     public String getAddr() {
